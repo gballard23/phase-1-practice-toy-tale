@@ -53,3 +53,35 @@ window.addEventListener('load', async function (){
   
 
 })
+
+const inputForm = document.querySelector('form');
+
+inputForm.addEventListener('submit', async (e) => {
+e.preventDefault
+
+
+let toyName = document.getElementById('name').value;
+let toyImage = document.getElementById('image').value;
+  let newToy = {
+    name: toyName,
+    image: toyImage,
+    likes: 0
+  }
+
+  addNewToy(newToy);
+
+
+function addNewToy(newToy){
+  fetch("http://localhost:3000/toys",{
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    },
+    body: JSON.stringify(newToy)
+  })
+  .then(res => res.json())
+  .then(toy => console.log(toy))
+}
+
+})
