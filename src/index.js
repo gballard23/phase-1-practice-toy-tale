@@ -18,6 +18,7 @@ let container = document.querySelector('#toy-collection');
 
 window.addEventListener('load', async function (){
   console.log('its loaded');
+  
 
   let res = await fetch('http://localhost:3000/toys');
   let data = await res.json();
@@ -43,11 +44,16 @@ window.addEventListener('load', async function (){
     newElement.appendChild(p);
 
     let btn = document.createElement('button');
+    let id = data[i].id;
     btn.innerHTML = 'Like';
     newElement.appendChild(btn);
+    btn.setAttribute('id', id);
+    
 
     img.classList.add('toy-avatar');
     btn.classList.add('like-btn');
+    btn.addEventListener('click', handleLikes)
+
   }
 
   
@@ -85,3 +91,34 @@ function addNewToy(newToy){
 }
 
 })
+
+
+
+function handleLikes(event){
+    
+    let id = event.target.id;
+  console.log(id)
+  
+  let likeNum = event.target.parentElement.querySelector('p');
+
+  let cardLikes = parseInt(likeNum.innerHTML);
+  console.log(cardLikes)
+
+  newLikeNum = {
+    "likes": cardLikes + 1
+  }
+
+  const patchJson = {
+    method: "PATCH",
+    headers: {
+      "Content-Type" : "application/json"
+    },
+    body: JSON.stringify(newLikeNum)
+  }
+  fetch(`http://localhost:3000/toys/${id}`, patchJson)
+  .then(res => res.json())
+  .then(toyObj => likeNum.innerHTML = toyObj.likes)
+
+
+}
+  
